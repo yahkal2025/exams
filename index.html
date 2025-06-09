@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול בחינות - לוח בקרה</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="particles">
+        <div class="particle" style="left: 10%; top: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; top: 80%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 60%; top: 30%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 80%; top: 70%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 90%; top: 10%; animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="logo">
+                <img src="https://www.iaf.org.il/favicon.ico" alt="סמל חיל האוויר" id="iaf-logo">
+                <h1>מערכת ניהול בחינות</h1>
+            </div>
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span id="current-user">משתמש מחובר</span>
+            </div>
+        </header>
+
+        <!-- Dashboard -->
+        <section class="dashboard">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-chart-line"></i> לוח בקרה</h2>
+                <div class="dashboard-date-filter">
+                    <label>סינון לפי תאריך סגירה:</label>
+                    <input type="date" id="dashboard-start-date">
+                    <span>עד</span>
+                    <input type="date" id="dashboard-end-date">
+                    <button type="button" class="btn primary" id="dashboard-date-filter-btn">
+                        <i class="fas fa-filter"></i> סנן
+                    </button>
+                    <button type="button" class="btn refresh" id="dashboard-clear-date-btn">
+                        <i class="fas fa-times"></i> נקה
+                    </button>
+                </div>
+            </div>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <div class="card-icon open">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>בחינות פתוחות</h3>
+                        <p id="open-exams-count">0</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon closed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>בחינות סגורות</h3>
+                        <p id="closed-exams-count">0</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon average">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>ממוצע ימי טיפול</h3>
+                        <p id="average-processing-days">0 ימים</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="action-buttons">
+            <a href="new-exam.html" class="btn primary">
+                <i class="fas fa-plus-circle"></i> הזמנת בחינה חדשה
+            </a>
+            <a href="close-exam.html" class="btn secondary">
+                <i class="fas fa-check-double"></i> סגירת בחינה
+            </a>
+            <button class="btn refresh" id="refresh-data-btn">
+                <i class="fas fa-sync-alt"></i> רענון נתונים
+            </button>
+            <button class="btn copy-link" id="copy-link-btn">
+                <i class="fas fa-link"></i> העתק קישור לטופס
+            </button>
+            <button class="btn" id="config-btn" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
+                <i class="fas fa-cog"></i> הגדרות מערכת
+            </button>
+        </section>
+
+        <!-- Filters -->
+        <section class="filters">
+            <div class="filter-group">
+                <label for="status-filter">סטטוס:</label>
+                <select id="status-filter">
+                    <option value="all">הכל</option>
+                    <option value="open">פתוח</option>
+                    <option value="closed">סגור</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="search-input">חיפוש:</label>
+                <input type="text" id="search-input" placeholder="חפש לפי מפעל, איש קשר או מספר הזמנה...">
+            </div>
+            
+            <div class="filter-group date-range">
+                <label>תאריך סגירה:</label>
+                <input type="date" id="start-date">
+                <span>עד</span>
+                <input type="date" id="end-date">
+                <button type="button" class="btn primary" id="filter-by-date-btn">
+                    <i class="fas fa-search"></i> סנן
+                </button>
+                <button type="button" class="btn refresh" id="clear-date-filter-btn">
+                    נקה
+                </button>
+            </div>
+        </section>
+
+        <!-- Table -->
+        <section class="exams-table-container">
+            <table class="exams-table" id="exams-table">
+                <thead>
+                    <tr>
+                        <th>מס' סידורי</th>
+                        <th>מס' הזמנה</th>
+                        <th>מפעל</th>
+                        <th>איש קשר</th>
+                        <th>קצין קישור</th>
+                        <th>כמות</th>
+                        <th>תאריך מבוקש</th>
+                        <th>סטטוס</th>
+                        <th>תאריך סגירה</th>
+                        <th>עבר/נכשל</th>
+                        <th>ימי טיפול</th>
+                        <th>פעולות</th>
+                    </tr>
+                </thead>
+                <tbody id="exams-table-body">
+                    <tr>
+                        <td colspan="12" class="loading-message">
+                            <i class="fas fa-spinner fa-spin"></i> טוען נתונים...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- Configuration Modal -->
+    <div id="config-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-cog"></i> הגדרות מערכת</h2>
+                <span class="close-modal" data-modal="config-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="config-status" id="config-status">
+                    <!-- סטטוס התצורה יוצג כאן -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="webapp-url">
+                        <i class="fas fa-link"></i>
+                        כתובת Google Apps Script Web App:
+                    </label>
+                    <input type="url" id="webapp-url" placeholder="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec">
+                    <small>הדבק כאן את כתובת ה-Web App שקיבלת מ-Google Apps Script</small>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn primary" id="save-config-btn">
+                        <i class="fas fa-save"></i> שמור הגדרות
+                    </button>
+                    <button type="button" class="btn secondary" id="test-config-btn">
+                        <i class="fas fa-vial"></i> בדוק חיבור
+                    </button>
+                    <button type="button" class="btn refresh" id="clear-config-btn">
+                        <i class="fas fa-trash"></i> נקה הגדרות
+                    </button>
+                </div>
+                
+                <div class="config-help">
+                    <h3><i class="fas fa-question-circle"></i> עזרה</h3>
+                    <ol>
+                        <li>גש ל-<a href="https://script.google.com" target="_blank">script.google.com</a></li>
+                        <li>צור פרויקט חדש והדבק את קוד Google Apps Script</li>
+                        <li>פרסם את הפרויקט כ-"Web App"</li>
+                        <li>העתק את ה-URL והדבק אותו למעלה</li>
+                        <li>לחץ "שמור הגדרות" ו"בדוק חיבור"</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <div class="notification-content">
+            <span id="notification-message"></span>
+            <span class="close-notification">&times;</span>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
