@@ -3,7 +3,7 @@
 class SheetsAPI {
     constructor() {
         // Google Apps Script Web App URL - יש להחליף בכתובת האמיתית
-        this.webAppUrl = 'https://script.google.com/macros/s/AKfycbxvNg9-3btFrKKoRVMos47jsgaqzvtBfNyIFr8wbQu5CQajX5w1gr6UCvxR5hvtZVtW/exec';
+        this.webAppUrl = 'https://script.google.com/macros/s/AKfycbx6HG5TU_gkdsz2OspekkrtRbLML0CbAPqImK78twYPTW3NAIg4Sf1ajf6RiUkBup6c/exec';
         this.retryCount = 0;
         this.maxRetries = CONFIG.SETTINGS.MAX_RETRIES;
     }
